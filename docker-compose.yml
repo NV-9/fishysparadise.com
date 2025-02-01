@@ -1,10 +1,11 @@
 
 services:
-  vite-app:
+  web:
     build: .
-    ports:
-      - "3000:3000"
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`fishysparadise.com`)"
 
   reverse-proxy:
     image: traefik:v3.1
