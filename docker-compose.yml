@@ -18,11 +18,15 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"      
       - "--certificatesresolvers.webresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.webresolver.acme.email=nalabotuviswamedha@gmail.com"
       - "--certificatesresolvers.webresolver.acme.storage=/letsencrypt/acme.json"
     ports:
+      - "80:80"
       - "443:443"
       - "8080:8080"
     volumes:
