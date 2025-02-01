@@ -1,7 +1,7 @@
 
 services:
   web:
-    image: ghcr.io/nv-9/fishysparadise:prod
+    image: ghcr.io/nv-9/fishysparadise.com:prod
     restart: unless-stopped
     deploy:
       mode: replicated
