@@ -4,6 +4,9 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
+LABEL org.opencontainers.image.source="https://github.com/NV-9/fishysparadise.com:prod"
+LABEL org.opencontainers.image.description="Vite + TypeScript + Lit Application"
+
 # Copy package files
 COPY package.json package-lock.json ./
 
