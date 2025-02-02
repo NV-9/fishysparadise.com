@@ -81,7 +81,7 @@ services:
       MYSQL_USER: "pterodactyl"
       MYSQL_PASSWORD: "pterodactyl"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - panel-db_data:/var/lib/mysql
 
   redis:
     image: redis:alpine
