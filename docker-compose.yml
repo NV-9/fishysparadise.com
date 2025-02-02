@@ -43,58 +43,31 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
   
   panel:
-    image: ghcr.io/pterodactyl/panel:latest
+    image: githubyumao/mcsmanager-web:latest
     restart: unless-stopped
-    depends_on:
-      - panel-db
-      - redis
-    env_file:
-      - .env
     volumes:
-      - pterodactyl_data:/app
+      - "/etc/localtime:/etc/localtime:ro:"
+      - "/panel/web/data:/opt/mcsmanager/web/data"
+      - "/panel/web/logs:/opt/mcsmanager/web/logs"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.pterodactyl.rule=Host(`panel.fishysparadise.com`)"
-      - "traefik.http.routers.pterodactyl.entrypoints=websecure"
-      - "traefik.http.routers.pterodactyl.tls.certresolver=webresolver"
+      - "traefik.http.routers.panel.rule=Host(`panel.fishysparadise.com`)"
+      - "traefik.http.routers.panel.entrypoints=websecure"
+      - "traefik.http.routers.panel.tls.certresolver=webresolver"
 
-  pterodactyl-wings:
-    image: ghcr.io/pterodactyl/wings:latest
+  daemon:
+    image: githubyumao/mcsmanager-daemon:latest
     restart: unless-stopped
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/pterodactyl:/var/lib/pterodactyl
-    environment:
-      - TZ=UTC
     ports:
-      - "8080:8080"
-      - "2022:2022"
-
-  panel-db:
-    image: mariadb:10.6
-    restart: unless-stopped
+      - "24444:24444"
     environment:
-      MYSQL_ROOT_PASSWORD: "pterodactyl"
-      MYSQL_DATABASE: "pterodactyl"
-      MYSQL_USER: "pterodactyl"
-      MYSQL_PASSWORD: "pterodactyl"
+      - MCSM_DOCKER_WORKSPACE_PATH=/panel/daemon/data/InstanceData
     volumes:
-      - panel-db_data:/var/lib/mysql
-
-  redis:
-    image: redis:alpine
-    restart: unless-stopped
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/panel/daemon/data:/opt/mcsmanager/daemon/data"
+      - "/panel/daemon/logs:/opt/mcsmanager/daemon/logs"
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
 
 volumes:
   letsencrypt:
-  pterodactyl_data:
-  panel-db_data:
-
-
-
-
-
-
- 
