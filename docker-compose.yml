@@ -17,7 +17,13 @@ services:
     image: pufferpanel/pufferpanel:latest
     restart: unless-stopped
     environment:
-      PUFFERPANEL_DB: sqlite
+      PUFFERPANEL_DB: mysql
+      PUFFERPANEL_DB_HOST: panel-db
+      PUFFERPANEL_DB_USER: pufferpanel
+      PUFFERPANEL_DB_PASSWORD: pufferpanel
+      PUFFERPANEL_DB_NAME: pufferpanel
+    depends_on:
+      - panel-db
     ports:
       - "25565:25565"
     labels:
@@ -28,6 +34,17 @@ services:
       - "traefik.http.services.pufferpanel.loadbalancer.server.port=8080"
     volumes:
       - /opt/pufferpanel:/var/lib/pufferpanel
+
+  panel-db:
+    image: mysql:9.2.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: pufferpanel
+      MYSQL_USER: pufferpanel
+      MYSQL_PASSWORD: pufferpanel
+    volumes:
+      - panel_db:/var/lib/mysql
 
   reverse-proxy:
     image: traefik:v3.1
@@ -63,3 +80,4 @@ services:
 
 volumes:
   letsencrypt:
+  panel_db:
