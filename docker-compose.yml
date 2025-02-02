@@ -23,6 +23,7 @@ services:
       - "traefik.http.routers.panel.rule=Host(`panel.fishysparadise.com`)"
       - "traefik.http.routers.panel.entrypoints=websecure"
       - "traefik.http.routers.panel.tls.certresolver=webresolver"
+      - "traefik.http.services.pufferpanel.loadbalancer.server.port=8080"
     volumes:
       - pufferpanel:/var/lib/pufferpanel
 
