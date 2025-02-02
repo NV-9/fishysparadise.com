@@ -16,6 +16,7 @@ services:
   reverse-proxy:
     image: traefik:v3.1
     command:
+      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -28,6 +29,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     volumes:
       - "letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
@@ -65,6 +67,12 @@ services:
       - "/panel/daemon/data:/opt/mcsmanager/daemon/data"
       - "/panel/daemon/logs:/opt/mcsmanager/daemon/logs"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.daemon.rule=Host(`daemon.fishysparadise.com`)"
+      - "traefik.http.routers.daemon.entrypoints=websecure"
+      - "traefik.http.routers.daemon.tls.certresolver=webresolver"
+      - "traefik.http.services.daemon.loadbalancer.server.port=24444"
 
 
 volumes:
