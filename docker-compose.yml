@@ -12,6 +12,19 @@ services:
       - "traefik.http.routers.web.entrypoints=websecure"
       - "traefik.http.routers.web.tls.certresolver=webresolver"
       - "com.centurylinklabs.watchtower.enable=true"
+  
+  panel:
+    image: pufferpanel/pufferpanel:latest
+    restart: unless-stopped
+    environment:
+      PUFFERPANEL_DB: sqlite
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.panel.rule=Host(`panel.fishysparadise.com`)"
+      - "traefik.http.routers.panel.entrypoints=websecure"
+      - "traefik.http.routers.panel.tls.certresolver=webresolver"
+    volumes:
+      - pufferpanel:/var/lib/pufferpanel
 
   reverse-proxy:
     image: traefik:v3.1
@@ -47,3 +60,4 @@ services:
 
 volumes:
   letsencrypt:
+  pufferpanel:
