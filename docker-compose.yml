@@ -67,8 +67,15 @@ services:
       - "/panel/daemon/data:/opt/mcsmanager/daemon/data"
       - "/panel/daemon/logs:/opt/mcsmanager/daemon/logs"
       - "/var/run/docker.sock:/var/run/docker.sock"
-    ports:
-      - "24444:24444"
-      
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.daemon.rule=Host(`46.202.194.59`)"
+      - "traefik.http.routers.daemon.entrypoints=websecure"
+      - "traefik.http.routers.daemon.tls.certresolver=webresolver"
+      - "traefik.http.services.daemon.loadbalancer.server.port=24444"
+      - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Upgrade=websocket"
+      - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Connection=Upgrade"
+      - "traefik.http.routers.daemon.middlewares=daemon-ws"
+
 volumes:
   letsencrypt:
