@@ -76,8 +76,6 @@ services:
       - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Upgrade=websocket"
       - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Connection=Upgrade"
       - "traefik.http.routers.daemon.middlewares=daemon-ws"
-    ports:
-      - "24444:24444"
 
 volumes:
   letsencrypt:
