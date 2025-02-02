@@ -43,41 +43,6 @@ services:
       - "--rolling-restart"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-  
-  panel:
-    image: githubyumao/mcsmanager-web:latest
-    restart: unless-stopped
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/panel/web/data:/opt/mcsmanager/web/data"
-      - "/panel/web/logs:/opt/mcsmanager/web/logs"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.panel.rule=Host(`panel.fishysparadise.com`)"
-      - "traefik.http.routers.panel.entrypoints=websecure"
-      - "traefik.http.routers.panel.tls.certresolver=webresolver"
-
-  daemon:
-    image: githubyumao/mcsmanager-daemon:latest
-    restart: unless-stopped
-    environment:
-      - MCSM_DOCKER_WORKSPACE_PATH=/panel/daemon/data/InstanceData
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/panel/daemon/data:/opt/mcsmanager/daemon/data"
-      - "/panel/daemon/logs:/opt/mcsmanager/daemon/logs"
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.daemon.rule=Host(`46.202.194.59`)"
-      - "traefik.http.routers.daemon.entrypoints=websecure"
-      - "traefik.http.routers.daemon.tls.certresolver=webresolver"
-      - "traefik.http.services.daemon.loadbalancer.server.port=24444"
-      - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Upgrade=websocket"
-      - "traefik.http.middlewares.daemon-ws.headers.customrequestheaders.Connection=Upgrade"
-      - "traefik.http.routers.daemon.middlewares=daemon-ws"
-    ports:
-      - "24444:24444"
 
 volumes:
   letsencrypt:
