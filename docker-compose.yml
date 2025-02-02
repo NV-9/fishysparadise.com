@@ -18,6 +18,8 @@ services:
     restart: unless-stopped
     environment:
       PUFFERPANEL_DB: sqlite
+    ports:
+      - "25565:25565"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.panel.rule=Host(`panel.fishysparadise.com`)"
