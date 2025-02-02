@@ -46,7 +46,7 @@ services:
     image: githubyumao/mcsmanager-web:latest
     restart: unless-stopped
     volumes:
-      - "/etc/localtime:/etc/localtime:ro:"
+      - "/etc/localtime:/etc/localtime:ro"
       - "/panel/web/data:/opt/mcsmanager/web/data"
       - "/panel/web/logs:/opt/mcsmanager/web/logs"
     labels:
