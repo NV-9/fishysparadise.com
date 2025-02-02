@@ -46,7 +46,7 @@ services:
     image: ghcr.io/pterodactyl/panel:latest
     restart: unless-stopped
     depends_on:
-      - mariadb
+      - panel-db
       - redis
     env_file:
       - .env
