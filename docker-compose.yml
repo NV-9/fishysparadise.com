@@ -12,25 +12,39 @@ services:
       - "traefik.http.routers.web.entrypoints=websecure"
       - "traefik.http.routers.web.tls.certresolver=webresolver"
       - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - proxy
  
   reverse-proxy:
     image: traefik:v3.1
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.address=:http"
+      - "--entrypoints.websecure.address=:https"
+      - "--entrypoints.smtp.address=:smtp"
+      - "--entrypoints.submissions.address=:submissions"
+      - "--entrypoints.imaps.address=:imaps"
+      - "--entrypoints.pop3s.address=:pop3s"
+      - "--entrypoints.sieve.address=:sieve"
       - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
       - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--certificatesresolvers.webresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.webresolver.acme.email=nalabotuviswamedha@gmail.com"
       - "--certificatesresolvers.webresolver.acme.storage=/letsencrypt/acme.json"
     ports:
+      - "25:25"
       - "80:80"
       - "443:443"
+      - "465:465"
+      - "993:993"
+      - "995:995"
+      - "4190:4190"
     volumes:
       - "letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - proxy
 
   watchtower:
     image: containrrr/watchtower
@@ -44,3 +58,7 @@ services:
 
 volumes:
   letsencrypt:
+
+networks:
+  proxy:
+    external: true
