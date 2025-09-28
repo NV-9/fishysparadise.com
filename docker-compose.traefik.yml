@@ -1,0 +1,35 @@
+
+services:
+  reverse-proxy:
+    image: traefik:v3.3
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.allowEmptyServices=true"
+      - "--entrypoints.web.address=:http"
+      - "--entrypoints.websecure.address=:https"
+      - "--certificatesresolvers.myresolver.acme.email=nalabotuviswamedha@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # - "--api.insecure=true"
+      # - "--log.level=DEBUG"
+    ports:
+      - "25:25"
+      - "80:80"
+      - "443:443"
+      - "465:465"
+      - "993:993"
+      - "995:995"
+      - "4190:4190"
+      # - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt:/letsencrypt 
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

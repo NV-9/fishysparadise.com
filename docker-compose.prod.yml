@@ -1,0 +1,33 @@
+
+services:
+  web:
+    image: ghcr.io/nv-9/fishysparadise.com:prod
+    restart: unless-stopped
+    deploy:
+      mode: replicated
+      replicas: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`fishysparadise.com`)"
+      - "traefik.http.routers.web.entrypoints=websecure"
+      - "traefik.http.routers.web.tls.certresolver=webresolver"
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - proxy
+ 
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+      - "--rolling-restart"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+volumes:
+  letsencrypt:
+
+networks:
+  proxy:
+    external: true
